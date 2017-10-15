@@ -1,7 +1,9 @@
 package com.admin.claire.materialdesignpatterns_navigationdrawer;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -29,6 +31,9 @@ public class MainActivity extends AppCompatActivity {
     private static final String NAV_ITEM_ID = "nav_index";
     //用來儲存點擊了的 menuItem id,必免旋轉螢幕後 menu 和 contentTextView 會被重設
     private int navItemId;
+
+    //Intent DisplayMessageActivity 附加資訊
+    public static final String EXTRA_MESSAGE = "com.admin.claire.materialdesignpatterns_navigationdrawer.MESSAGE";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +78,10 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, menuItem.getTitle() + "pressed",
                         Toast.LENGTH_SHORT).show();
 
+                //Snack bar 跟 Toast 不同的是，Snackbar 是以 view 作參數，而不是以 context
+                Snackbar.make(contentTextView , menuItem.getTitle() + "pressed",
+                        Snackbar.LENGTH_SHORT).show();
+
                 navigateTo(menuItem);
                 mDrawerLayout.closeDrawers();
                 return true;
@@ -112,5 +121,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(NAV_ITEM_ID, navItemId);
+    }
+
+    public void sendMessage(View view){
+        /** Called when the user taps the Send button */
+        Intent intent = new Intent(MainActivity.this, DisplayMessageActivity.class);
+        String message = editText.getText().toString();
+        intent.putExtra(EXTRA_MESSAGE,message);
+        startActivity(intent);
+
     }
 }
